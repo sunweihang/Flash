@@ -8,13 +8,14 @@ import {
   Vec4,
   assetManager,
   primitives,
+  resources,
   utils,
 } from 'cc';
 import { Theme } from './Theme';
 
 const _matCache = new Map<string, Material>();
 
-/** Custom neon grid floor effect / material (see assets/effects/neon-floor.effect). */
+/** Custom neon grid floor effect / material (see assets/resources/effects/neon-floor.effect). */
 export const NEON_FLOOR_EFFECT_UUID = 'd63b8277-cd84-4723-b3a2-b6b417ce9cfd';
 export const NEON_FLOOR_MAT_UUID = '752bd306-3f3d-4e43-92a9-3763246502e9';
 
@@ -30,29 +31,56 @@ function loadByUuid<T extends object>(id: string): Promise<T> {
   });
 }
 
+function loadFromResources<T extends object>(path: string, type: new (...args: never[]) => T): Promise<T> {
+  return new Promise((resolve, reject) => {
+    resources.load(path, type as never, (err, asset) => {
+      if (err || !asset) reject(err || new Error(path));
+      else resolve(asset as T);
+    });
+  });
+}
+
+function applyFloorDefaults(mat: Material): void {
+  mat.setProperty('baseColor', Theme.floor);
+  mat.setProperty('gridColor', Theme.grid);
+  mat.setProperty('reflectTint', new Color(120, 220, 255, 255));
+  mat.setProperty('gridSize', 2.4);
+  mat.setProperty('lineWidth', 0.035);
+  mat.setProperty('gridGlow', 2.4);
+  mat.setProperty('reflectStrength', 0);
+  mat.setProperty('horizonGlow', 0);
+}
+
 /** Shared NeonFloor material (cloned per mesh so light uniforms stay independent). */
 export async function loadNeonFloorMaterial(): Promise<Material | null> {
   if (_floorMat) return _floorMat;
   if (_floorMatPromise) return _floorMatPromise;
   _floorMatPromise = (async () => {
+    // Prefer resources paths so web-mobile packing never tree-shakes the floor.
+    try {
+      _floorMat = await loadFromResources<Material>('materials/NeonFloor', Material);
+      applyFloorDefaults(_floorMat);
+      return _floorMat;
+    } catch {
+      // Fall through
+    }
     try {
       _floorMat = await loadByUuid<Material>(NEON_FLOOR_MAT_UUID);
+      applyFloorDefaults(_floorMat);
       return _floorMat;
     } catch {
       // Fall through — build from effect if the .mtl is not imported yet.
     }
     try {
-      const effect = await loadByUuid<EffectAsset>(NEON_FLOOR_EFFECT_UUID);
+      let effect: EffectAsset;
+      try {
+        effect = await loadFromResources<EffectAsset>('effects/neon-floor', EffectAsset);
+      } catch {
+        effect = await loadByUuid<EffectAsset>(NEON_FLOOR_EFFECT_UUID);
+      }
       const mat = new Material();
       mat.initialize({ effectAsset: effect });
-      mat.setProperty('baseColor', Theme.floor);
-      mat.setProperty('gridColor', Theme.grid);
-      mat.setProperty('reflectTint', new Color(120, 220, 255, 255));
-      mat.setProperty('gridSize', 2.4);
-      mat.setProperty('lineWidth', 0.035);
-      mat.setProperty('gridGlow', 2.4);
-      mat.setProperty('reflectStrength', 0);
-      mat.setProperty('horizonGlow', 0);
+      applyFloorDefaults(mat);
       _floorMat = mat;
       return mat;
     } catch (err) {
@@ -305,8 +333,9 @@ export function makeStickFigure(parent: Node, name: string): Node {
 }
 
 /**
- * Soft bloom shell + floating gold shards around a skinned monster.
- * Matches the reference: dark body, yellow edge bleed, cube debris.
+ * Floating gold shards around a skinned monster.
+ * Rim/edge glow comes from neon-rim on the mesh — do NOT add transparent
+ * bloom spheres (they read as blurry yellow discs on web-mobile).
  */
 export function attachMonsterNeonAura(root: Node): void {
   const old = root.getChildByName('RimGlow');
@@ -316,23 +345,6 @@ export function attachMonsterNeonAura(root: Node): void {
   root.addChild(aura);
   // Body center for the scaled zombie (root scale ~3.2).
   aura.setPosition(0, 0.55, 0);
-
-  makeSphere(
-    aura,
-    'bloomOuter',
-    new Color(255, 210, 40, 55),
-    new Vec3(0, 0.15, 0),
-    new Vec3(1.05, 1.55, 1.05),
-    true,
-  );
-  makeSphere(
-    aura,
-    'bloomInner',
-    new Color(255, 230, 80, 70),
-    new Vec3(0, 0.2, 0),
-    new Vec3(0.55, 0.85, 0.55),
-    true,
-  );
 
   const sparks = new Node('sparks');
   aura.addChild(sparks);

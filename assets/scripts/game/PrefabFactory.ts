@@ -66,6 +66,22 @@ export function warmupPrefabs(): Promise<void> {
     // Best-effort warmup; spawn never depends on this succeeding.
     await Promise.allSettled([
       (async () => {
+        // Prefer resources path so web-mobile always packs neon-rim.
+        try {
+          const mat = await new Promise<Material>((resolve, reject) => {
+            resources.load('materials/NeonMonster', Material, (err, asset) => {
+              if (err || !asset) reject(err || new Error('NeonMonster'));
+              else resolve(asset);
+            });
+          });
+          const effectUuid = (mat.effectAsset as EffectAsset | null)?.uuid;
+          if (effectUuid === NEON_RIM_EFFECT_UUID) {
+            _zombieMat = mat;
+            return;
+          }
+        } catch {
+          // fall through to UUID / build
+        }
         for (const id of ZOMBIE_MAT_FALLBACKS) {
           try {
             const mat = await loadByUuid<Material>(id);
@@ -264,7 +280,17 @@ function applyZombieMaterial(root: Node): void {
 
 async function buildNeonRimMaterial(): Promise<Material | null> {
   try {
-    const effect = await loadByUuid<EffectAsset>(NEON_RIM_EFFECT_UUID);
+    let effect: EffectAsset;
+    try {
+      effect = await new Promise<EffectAsset>((resolve, reject) => {
+        resources.load('effects/neon-rim', EffectAsset, (err, asset) => {
+          if (err || !asset) reject(err || new Error('neon-rim'));
+          else resolve(asset);
+        });
+      });
+    } catch {
+      effect = await loadByUuid<EffectAsset>(NEON_RIM_EFFECT_UUID);
+    }
     const mat = new Material();
     mat.initialize({ effectAsset: effect, technique: 0 });
     mat.setProperty('mainColor', new Color(4, 3, 2, 255));
