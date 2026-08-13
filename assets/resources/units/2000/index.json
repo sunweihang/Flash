@@ -1,0 +1,16 @@
+{
+  "unitId": 2000,
+  "name": "Enemy00",
+  "prefab": "units/2000/Output/2000",
+  "category": "enemy",
+  "description": "测试怪",
+  "requiredSlots": [
+    1,
+    17,
+    2,
+    0
+  ],
+  "collisionRadius": 0.25,
+  "collisionHeight": 1,
+  "collisionCenterY": 0.5
+}

@@ -1,0 +1,16 @@
+{
+  "unitId": 2003,
+  "name": "Enemy03",
+  "category": "enemy",
+  "prefab": "units/2003/Output/2003",
+  "description": "",
+  "requiredSlots": [
+    1,
+    17,
+    2,
+    0
+  ],
+  "collisionRadius": 0.35,
+  "collisionHeight": 1,
+  "collisionCenterY": 0.5
+}

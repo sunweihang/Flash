@@ -1,0 +1,78 @@
+{
+  "__type__": "cc.Material",
+  "_name": "ZombieNeon",
+  "_objFlags": 0,
+  "__editorExtras__": {},
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "402b29ed-02b9-4274-a1fd-f8a9f7d38a9f",
+    "__expectedType__": "cc.EffectAsset"
+  },
+  "_techIdx": 0,
+  "_defines": [
+    {},
+    {}
+  ],
+  "_states": [
+    {
+      "rasterizerState": {},
+      "depthStencilState": {},
+      "blendState": {
+        "targets": [
+          {}
+        ]
+      }
+    },
+    {
+      "rasterizerState": {},
+      "depthStencilState": {},
+      "blendState": {
+        "targets": [
+          {}
+        ]
+      }
+    }
+  ],
+  "_props": [
+    {
+      "mainColor": {
+        "__type__": "cc.Color",
+        "r": 4,
+        "g": 3,
+        "b": 2,
+        "a": 255
+      },
+      "rimColor": {
+        "__type__": "cc.Color",
+        "r": 255,
+        "g": 230,
+        "b": 30,
+        "a": 255
+      },
+      "rimPower": 2.8,
+      "rimIntensity": 5.8,
+      "glowBoost": 2.2,
+      "outlineWidth": 0.022
+    },
+    {
+      "mainColor": {
+        "__type__": "cc.Color",
+        "r": 4,
+        "g": 3,
+        "b": 2,
+        "a": 255
+      },
+      "rimColor": {
+        "__type__": "cc.Color",
+        "r": 255,
+        "g": 230,
+        "b": 30,
+        "a": 255
+      },
+      "rimPower": 2.8,
+      "rimIntensity": 5.8,
+      "glowBoost": 2.2,
+      "outlineWidth": 0.022
+    }
+  ]
+}

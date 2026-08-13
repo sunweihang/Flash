@@ -1,0 +1,11 @@
+{
+  "unitId": 2001,
+  "mounts": {
+    "0": "BloodHUD",
+    "1": "bone_root",
+    "2": "bone_hit",
+    "17": "fire_point",
+    "21": "bone_forward",
+    "22": "mainBody"
+  }
+}

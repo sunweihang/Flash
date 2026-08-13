@@ -1,0 +1,97 @@
+CCEffect %{
+  techniques:
+  - name: opaque
+    passes:
+    - vert: floor-vs:vert
+      frag: floor-fs:frag
+      properties: &props
+        baseColor:       { value: [0.02, 0.05, 0.12, 1.0], editor: { type: color } }
+        gridColor:       { value: [0.18, 0.55, 1.0, 1.0], editor: { type: color } }
+        reflectTint:     { value: [0.45, 0.85, 1.0, 1.0], editor: { type: color } }
+        gridSize:        { value: 2.4 }
+        lineWidth:       { value: 0.035 }
+        gridGlow:        { value: 2.4 }
+        reflectStrength: { value: 0.0 }
+        fresnelPower:    { value: 3.2 }
+        horizonGlow:     { value: 0.0 }
+        light0:          { value: [0.0, 1.2, -1.5, 0.0] }
+        light1:          { value: [0.0, 1.0, 20.0, 0.0] }
+        light2:          { value: [0.0, 1.0, 28.0, 0.0] }
+        light3:          { value: [0.0, 1.0, 36.0, 0.0] }
+        lightColor0:     { value: [0.35, 0.85, 1.0, 1.0], editor: { type: color } }
+        lightColor1:     { value: [1.0, 0.85, 0.25, 1.0], editor: { type: color } }
+        lightColor2:     { value: [1.0, 0.85, 0.25, 1.0], editor: { type: color } }
+        lightColor3:     { value: [1.0, 0.85, 0.25, 1.0], editor: { type: color } }
+      depthStencilState:
+        depthTest: true
+        depthWrite: true
+      rasterizerState:
+        cullMode: back
+}%
+
+CCProgram floor-vs %{
+  precision highp float;
+  #include <legacy/input-standard>
+  #include <builtin/uniforms/cc-global>
+  #include <legacy/decode-base>
+  #include <legacy/local-batch>
+
+  out vec3 v_worldPos;
+  out vec3 v_viewDir;
+
+  vec4 vert () {
+    StandardVertInput In;
+    CCVertInput(In);
+
+    mat4 matWorld, matWorldIT;
+    CCGetWorldMatrixFull(matWorld, matWorldIT);
+
+    vec4 worldPos = matWorld * In.position;
+    v_worldPos = worldPos.xyz;
+    v_viewDir = normalize(cc_cameraPos.xyz - worldPos.xyz);
+    return cc_matViewProj * worldPos;
+  }
+}%
+
+CCProgram floor-fs %{
+  precision highp float;
+  #include <legacy/output>
+
+  in vec3 v_worldPos;
+  in vec3 v_viewDir;
+
+  uniform Constant {
+    vec4 baseColor;
+    vec4 gridColor;
+    vec4 reflectTint;
+    vec4 light0;
+    vec4 light1;
+    vec4 light2;
+    vec4 light3;
+    vec4 lightColor0;
+    vec4 lightColor1;
+    vec4 lightColor2;
+    vec4 lightColor3;
+    float gridSize;
+    float lineWidth;
+    float gridGlow;
+    float reflectStrength;
+    float fresnelPower;
+    float horizonGlow;
+  };
+
+  float gridLine(vec2 xz, float size, float width) {
+    vec2 g = abs(fract(xz / size) - 0.5);
+    float d = min(g.x, g.y) * size;
+    float core = 1.0 - smoothstep(0.0, width, d);
+    float halo = 1.0 - smoothstep(0.0, width * 4.5, d);
+    return core + halo * 0.35;
+  }
+
+  vec4 frag () {
+    float g = gridLine(v_worldPos.xz, max(gridSize, 0.2), max(lineWidth, 0.008));
+    vec3 col = baseColor.rgb;
+    col += gridColor.rgb * g * gridGlow;
+    return CCFragOutput(vec4(col, 1.0));
+  }
+}%

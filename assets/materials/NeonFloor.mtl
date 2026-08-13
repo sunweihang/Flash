@@ -1,0 +1,57 @@
+{
+  "__type__": "cc.Material",
+  "_name": "NeonFloor",
+  "_objFlags": 0,
+  "__editorExtras__": {},
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "d63b8277-cd84-4723-b3a2-b6b417ce9cfd",
+    "__expectedType__": "cc.EffectAsset"
+  },
+  "_techIdx": 0,
+  "_defines": [
+    {}
+  ],
+  "_states": [
+    {
+      "rasterizerState": {},
+      "depthStencilState": {},
+      "blendState": {
+        "targets": [
+          {}
+        ]
+      }
+    }
+  ],
+  "_props": [
+    {
+      "baseColor": {
+        "__type__": "cc.Color",
+        "r": 5,
+        "g": 12,
+        "b": 30,
+        "a": 255
+      },
+      "gridColor": {
+        "__type__": "cc.Color",
+        "r": 45,
+        "g": 140,
+        "b": 255,
+        "a": 255
+      },
+      "reflectTint": {
+        "__type__": "cc.Color",
+        "r": 120,
+        "g": 220,
+        "b": 255,
+        "a": 255
+      },
+      "gridSize": 2.4,
+      "lineWidth": 0.035,
+      "gridGlow": 2.4,
+      "reflectStrength": 0,
+      "fresnelPower": 3.2,
+      "horizonGlow": 0
+    }
+  ]
+}

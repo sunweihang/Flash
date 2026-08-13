@@ -1,0 +1,144 @@
+const fs = require('fs');
+
+const effect = `CCEffect %{
+  techniques:
+  - name: opaque
+    passes:
+    - vert: neon-vs:vert
+      frag: neon-fs:frag
+      properties: &props
+        mainColor:     { value: [0.02, 0.02, 0.02, 1.0], editor: { type: color } }
+        rimColor:      { value: [1.0, 0.92, 0.15, 1.0], editor: { type: color } }
+        rimPower:      { value: 2.4 }
+        rimIntensity:  { value: 4.5 }
+        glowBoost:     { value: 1.8 }
+        outlineWidth:  { value: 0.04 }
+      depthStencilState:
+        depthTest: true
+        depthWrite: true
+      rasterizerState:
+        cullMode: back
+    - vert: outline-vs:vert
+      frag: outline-fs:frag
+      properties: *props
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      rasterizerState:
+        cullMode: front
+}%
+
+CCProgram neon-vs %{
+  precision highp float;
+  #include <legacy/input-standard>
+  #include <builtin/uniforms/cc-global>
+  #include <legacy/decode-base>
+  #include <legacy/local-batch>
+
+  out vec3 v_worldNormal;
+  out vec3 v_viewDir;
+
+  vec4 vert () {
+    StandardVertInput In;
+    CCVertInput(In);
+
+    mat4 matWorld, matWorldIT;
+    CCGetWorldMatrixFull(matWorld, matWorldIT);
+
+    vec4 worldPos = matWorld * In.position;
+    v_worldNormal = normalize((matWorldIT * vec4(In.normal, 0.0)).xyz);
+    v_viewDir = normalize(cc_cameraPos.xyz - worldPos.xyz);
+    return cc_matViewProj * worldPos;
+  }
+}%
+
+CCProgram neon-fs %{
+  precision highp float;
+  #include <legacy/output>
+
+  in vec3 v_worldNormal;
+  in vec3 v_viewDir;
+
+  uniform Constant {
+    vec4 mainColor;
+    vec4 rimColor;
+    float rimPower;
+    float rimIntensity;
+    float glowBoost;
+    float outlineWidth;
+  };
+
+  vec4 frag () {
+    float ndv = abs(dot(normalize(v_worldNormal), normalize(v_viewDir)));
+    float rim = pow(1.0 - clamp(ndv, 0.0, 1.0), rimPower);
+    vec3 col = mainColor.rgb + rimColor.rgb * rim * rimIntensity * glowBoost;
+    return CCFragOutput(vec4(col, 1.0));
+  }
+}%
+
+CCProgram outline-vs %{
+  precision highp float;
+  #include <legacy/input-standard>
+  #include <builtin/uniforms/cc-global>
+  #include <legacy/decode-base>
+  #include <legacy/local-batch>
+
+  uniform Constant {
+    vec4 mainColor;
+    vec4 rimColor;
+    float rimPower;
+    float rimIntensity;
+    float glowBoost;
+    float outlineWidth;
+  };
+
+  vec4 vert () {
+    StandardVertInput In;
+    CCVertInput(In);
+
+    mat4 matWorld, matWorldIT;
+    CCGetWorldMatrixFull(matWorld, matWorldIT);
+
+    float w = outlineWidth > 0.0 ? outlineWidth : 0.035;
+    vec4 pos = In.position;
+    pos.xyz += normalize(In.normal) * w;
+    return cc_matViewProj * (matWorld * pos);
+  }
+}%
+
+CCProgram outline-fs %{
+  precision highp float;
+  #include <legacy/output>
+
+  uniform Constant {
+    vec4 mainColor;
+    vec4 rimColor;
+    float rimPower;
+    float rimIntensity;
+    float glowBoost;
+    float outlineWidth;
+  };
+
+  vec4 frag () {
+    vec3 col = rimColor.rgb * (1.25 + glowBoost * 0.4);
+    return CCFragOutput(vec4(col, 1.0));
+  }
+}%
+`;
+
+const effectPath = 'd:/Custom/Flash/assets/effects/neon-rim.effect';
+fs.writeFileSync(effectPath, effect.replace(/\n/g, '\r\n'));
+console.log('wrote', effectPath);
+
+for (const matPath of [
+  'd:/Custom/Flash/assets/materials/NeonMonster.mtl',
+  'd:/Custom/Flash/assets/materials/NeonKnife.mtl',
+  'd:/Custom/Flash/assets/materials/NeonMonsterOutline.mtl',
+]) {
+  if (!fs.existsSync(matPath)) continue;
+  const mat = JSON.parse(fs.readFileSync(matPath, 'utf8'));
+  mat._defines = [{}, {}, {}];
+  mat._techIdx = 0;
+  fs.writeFileSync(matPath, JSON.stringify(mat, null, 2).replace(/\n/g, '\r\n'));
+  console.log('fixed mat', matPath);
+}

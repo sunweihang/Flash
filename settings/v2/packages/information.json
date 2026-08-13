@@ -1,0 +1,23 @@
+{
+  "__version__": "1.0.1",
+  "information": {
+    "customSplash": {
+      "id": "customSplash",
+      "label": "customSplash",
+      "enable": false,
+      "customSplash": {
+        "complete": true,
+        "form": ""
+      }
+    },
+    "removeSplash": {
+      "id": "removeSplash",
+      "label": "removeSplash",
+      "enable": false,
+      "removeSplash": {
+        "complete": true,
+        "form": ""
+      }
+    }
+  }
+}
