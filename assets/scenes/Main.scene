@@ -3,6 +3,7 @@
     "__type__": "cc.SceneAsset",
     "_name": "Main",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "_native": "",
     "scene": {
       "__id__": 1
@@ -12,6 +13,7 @@
     "__type__": "cc.Scene",
     "_name": "Main",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "_parent": null,
     "_children": [
       {
@@ -22,6 +24,9 @@
       },
       {
         "__id__": 7
+      },
+      {
+        "__id__": 9
       }
     ],
     "_active": true,
@@ -56,15 +61,15 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 9
+      "__id__": 13
     },
-    "_reflectionProbeId": 0,
     "_id": "6427bb3d-333f-41b2-9f97-a2d60673c09d"
   },
   {
     "__type__": "cc.Node",
     "_name": "Main Camera",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "_parent": {
       "__id__": 1
     },
@@ -109,6 +114,7 @@
     "__type__": "cc.Camera",
     "_name": "",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "node": {
       "__id__": 2
     },
@@ -144,6 +150,8 @@
     "_screenScale": 1,
     "_visibility": 1822425087,
     "_targetTexture": null,
+    "_postProcess": null,
+    "_usePostProcess": false,
     "_cameraType": -1,
     "_trackingType": 0,
     "_id": "flMainCameraComp00001"
@@ -152,6 +160,7 @@
     "__type__": "cc.Node",
     "_name": "Directional Light",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "_parent": {
       "__id__": 1
     },
@@ -196,6 +205,7 @@
     "__type__": "cc.DirectionalLight",
     "_name": "",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "node": {
       "__id__": 4
     },
@@ -227,6 +237,9 @@
     "_csmLevel": 1,
     "_csmLayerLambda": 0.75,
     "_csmOptimizationMode": 2,
+    "_csmAdvancedOptions": false,
+    "_csmLayersTransition": false,
+    "_csmTransitionRange": 0.05,
     "_shadowFixedArea": false,
     "_shadowNear": 0.1,
     "_shadowFar": 10,
@@ -237,13 +250,13 @@
     "__type__": "cc.StaticLightSettings",
     "_baked": false,
     "_editorOnly": false,
-    "_bakeable": false,
     "_castShadow": false
   },
   {
     "__type__": "cc.Node",
     "_name": "GameRoot",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "_parent": {
       "__id__": 1
     },
@@ -297,45 +310,209 @@
     "_id": "flGameBootstrap000001"
   },
   {
-    "__type__": "cc.SceneGlobals",
-    "ambient": {
+    "__type__": "cc.Node",
+    "_name": "Arena",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [
+      {
+        "__id__": 10
+      }
+    ],
+    "_active": true,
+    "_components": [],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_mobility": 0,
+    "_layer": 1073741824,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "flArenaRootNode0000001"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "CJ",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "_parent": {
+      "__id__": 9
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 11
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": -0.7071067811865475,
+      "y": 0,
+      "z": 0,
+      "w": 0.7071067811865476
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_mobility": 0,
+    "_layer": 1073741824,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": -90,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "flArenaCJNode000000001"
+  },
+  {
+    "__type__": "cc.MeshRenderer",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
       "__id__": 10
     },
-    "shadows": {
-      "__id__": 11
-    },
-    "_skybox": {
+    "_enabled": true,
+    "__prefab": null,
+    "_materials": [
+      {
+        "__uuid__": "3ee2fc9a-18d0-4b26-b1c5-8903336b09c8",
+        "__expectedType__": "cc.Material"
+      }
+    ],
+    "_visFlags": 0,
+    "bakeSettings": {
       "__id__": 12
     },
-    "fog": {
-      "__id__": 13
+    "_mesh": {
+      "__uuid__": "f8732dde-d0cb-4572-b1f8-88d1ee239dc8@b8a2d",
+      "__expectedType__": "cc.Mesh"
     },
-    "octree": {
+    "_shadowCastingMode": 0,
+    "_shadowReceivingMode": 1,
+    "_shadowBias": 0,
+    "_shadowNormalBias": 0,
+    "_reflectionProbeId": -1,
+    "_reflectionProbeBlendId": -1,
+    "_reflectionProbeBlendWeight": 0,
+    "_enabledGlobalStandardSkinObject": false,
+    "_enableMorph": true,
+    "_id": "flArenaCJMeshRendr001"
+  },
+  {
+    "__type__": "cc.ModelBakeSettings",
+    "texture": null,
+    "uvParam": {
+      "__type__": "cc.Vec4",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 0
+    },
+    "_bakeable": false,
+    "_castShadow": false,
+    "_receiveShadow": false,
+    "_recieveShadow": false,
+    "_lightmapSize": 64,
+    "_useLightProbe": false,
+    "_bakeToLightProbe": true,
+    "_reflectionProbeType": 0,
+    "_bakeToReflectionProbe": true
+  },
+  {
+    "__type__": "cc.SceneGlobals",
+    "ambient": {
       "__id__": 14
     },
-    "lightProbeInfo": {
+    "shadows": {
       "__id__": 15
     },
-    "skin": {
+    "_skybox": {
       "__id__": 16
-    }
+    },
+    "fog": {
+      "__id__": 17
+    },
+    "octree": {
+      "__id__": 18
+    },
+    "skin": {
+      "__id__": 19
+    },
+    "lightProbeInfo": {
+      "__id__": 20
+    },
+    "postSettings": {
+      "__id__": 21
+    },
+    "bakedWithStationaryMainLight": false,
+    "bakedWithHighpLightmap": false
   },
   {
     "__type__": "cc.AmbientInfo",
     "_skyColorHDR": {
       "__type__": "cc.Vec4",
-      "x": 0.18,
-      "y": 0.28,
-      "z": 0.45,
-      "w": 0.55
+      "x": 0.2,
+      "y": 0.5,
+      "z": 0.8,
+      "w": 1.17187453125
+    },
+    "_skyColor": {
+      "__type__": "cc.Vec4",
+      "x": 0.2,
+      "y": 0.5,
+      "z": 0.8,
+      "w": 1.17187453125
     },
     "_skyIllumHDR": 45000,
     "_skyIllum": 45000,
     "_groundAlbedoHDR": {
       "__type__": "cc.Vec4",
-      "x": 0.12,
-      "y": 0.16,
-      "z": 0.22,
+      "x": 0.2,
+      "y": 0.2,
+      "z": 0.2,
+      "w": 1
+    },
+    "_groundAlbedo": {
+      "__type__": "cc.Vec4",
+      "x": 0.2,
+      "y": 0.2,
+      "z": 0.2,
       "w": 1
     },
     "_skyColorLDR": {
@@ -365,6 +542,7 @@
       "z": 0
     },
     "_distance": 0,
+    "_planeBias": 1,
     "_shadowColor": {
       "__type__": "cc.Color",
       "r": 0,
@@ -431,6 +609,12 @@
     "_depth": 8
   },
   {
+    "__type__": "cc.SkinInfo",
+    "_enabled": false,
+    "_blurRadius": 0.01,
+    "_sssIntensity": 3
+  },
+  {
     "__type__": "cc.LightProbeInfo",
     "_giScale": 1,
     "_giSamples": 1024,
@@ -443,8 +627,7 @@
     "_lightProbeSphereVolume": 1
   },
   {
-    "__type__": "cc.SkinInfo",
-    "_enabled": false,
-    "_scale": 5
+    "__type__": "cc.PostSettingsInfo",
+    "_toneMappingType": 0
   }
 ]

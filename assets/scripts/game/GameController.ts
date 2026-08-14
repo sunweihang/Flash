@@ -116,7 +116,7 @@ export class GameController extends Component {
     this._world = new Node('World');
     scene.addChild(this._world);
 
-    this._arena = new ArenaView(this._world);
+    this._arena = new ArenaView(scene);
     void warmupPrefabs();
     this._buildPlayer();
     this._buildUi(scene);
